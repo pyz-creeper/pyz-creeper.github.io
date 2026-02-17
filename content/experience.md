@@ -12,7 +12,7 @@ design:
 sections:
   - block: resume-experience
     content:
-      username: admin
+      username: liuzhuotao
     design:
       # Hugo date format
       date_format: 'January 2006'
@@ -21,15 +21,15 @@ sections:
   - block: resume-skills
     content:
       title: Skills & Hobbies
-      username: admin
+      username: liuzhuotao
     design:
       show_skill_percentage: false
   - block: resume-awards
     content:
       title: Awards
-      username: admin
+      username: liuzhuotao
   - block: resume-languages
     content:
       title: Languages
-      username: admin
+      username: liuzhuotao
 ---

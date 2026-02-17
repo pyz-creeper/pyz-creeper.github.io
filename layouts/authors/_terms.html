@@ -1,0 +1,87 @@
+{{ define "main" }}
+<div class="max-w-6xl mx-auto px-4 py-12">
+  
+  {{/* 1. 顶部个人信息区域：使用网格布局 */}}
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+    
+    {{/* 左侧栏：头像、姓名、角色、社交链接 (占据 4/12) */}}
+    <div class="md:col-span-4 flex flex-col items-center text-center">
+      {{ $avatar := (.Resources.ByType "image").GetMatch "avatar*" }}
+      {{ if $avatar }}
+        {{ $avatar_image := $avatar.Fill "400x400 center" }}
+        <img class="w-48 h-48 rounded-full shadow-lg mb-6 object-cover" src="{{ $avatar_image.RelPermalink }}" alt="{{ .Title }}">
+      {{ end }}
+      
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">{{ .Title }}</h1>
+      {{ with .Params.role }}
+        <p class="text-lg text-slate-600 dark:text-slate-400 mb-6">{{ . }}</p>
+      {{ end }}
+
+      {{/* 社交图标：Email, Github 等 */}}
+      <div class="flex space-x-4 text-2xl text-primary-600 dark:text-primary-400">
+        {{ range .Params.social }}
+          <a href="{{ .link | safeURL }}" target="_blank" rel="noopener" aria-label="{{ .icon }}">
+            <i class="{{ .pack | default "fab" }} fa-{{ .icon }} hover:text-primary-800 transition-colors"></i>
+          </a>
+        {{ end }}
+      </div>
+    </div>
+
+    {{/* 右侧栏：个人简介、研究兴趣、教育经历 (占据 8/12) */}}
+    <div class="md:col-span-8 prose prose-slate dark:prose-invert max-w-none">
+      {{/* 简介文本 */}}
+      <div class="mb-8 text-lg leading-relaxed">
+        {{ .Content }}
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 not-prose">
+        {{/* 研究兴趣 */}}
+        <div>
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            Interests
+          </h3>
+          <ul class="space-y-2 text-slate-700 dark:text-slate-300">
+            {{ range .Params.interests }}
+              <li class="flex items-center">
+                <span class="mr-2 text-primary-500">•</span> {{ . }}
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+
+        {{/* 教育经历 */}}
+        <div>
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            Education
+          </h3>
+          <ul class="space-y-4 text-slate-700 dark:text-slate-300">
+            {{ range .Params.education.courses }}
+              <li class="flex items-start">
+                <i class="fas fa-graduation-cap mt-1 mr-3 text-slate-400"></i>
+                <div>
+                  <p class="font-semibold leading-tight">{{ .course }}</p>
+                  <p class="text-sm text-slate-500">{{ .year }}, {{ .institution }}</p>
+                </div>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="border-slate-200 dark:border-slate-800 mb-12">
+
+  {{/* 2. 底部论文列表区域 */}}
+  <div class="max-w-4xl">
+    <h2 class="text-2xl font-bold mb-8">Latest Publications</h2>
+    <div id="pub-list">
+      {{/* 获取该作者的所有论文页面 */}}
+      {{ range .Pages }}
+        {{ partial "functions/render_view" (dict "page" . "item" . "view" "citation") }}
+      {{ end }}
+    </div>
+  </div>
+
+</div>
+{{ end }}

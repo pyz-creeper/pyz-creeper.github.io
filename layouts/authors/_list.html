@@ -1,0 +1,83 @@
+{{ define "main" }}
+
+<div data-pagefind-ignore class="container mx-auto px-6 py-10">
+
+  {{/* 1. 顶部标题区域 */}}
+  <div class="max-w-3xl mb-12">
+    <h1 class="text-5xl font-extrabold text-slate-900 dark:text-white mb-4">{{ .Title }}</h1>
+    {{ with .Content }}
+      <div class="prose prose-slate dark:prose-invert text-lg">
+        {{ . }}
+      </div>
+    {{ end }}
+  </div>
+
+  {{/* 2. 数据处理：直接从当前 Section 的子页面获取 */}}
+  {{- $groups := newScratch -}}
+  {{- $levels := slice "phd" "master" "alumni" -}}
+  {{- $labels := dict "phd" "PhD Students" "master" "Master Students" "alumni" "Alumni" -}}
+
+  {{- range .Pages }}
+    {{- if .Params.show_in_directory }}
+      {{- $level := lower (default "alumni" .Params.student_level) -}}
+      {{- $groups.Add $level (slice .) -}}
+    {{- end }}
+  {{- end }}
+
+  {{/* 3. 分组渲染 */}}
+  {{- range $lvl := $levels }}
+    {{- with $groups.Get $lvl }}
+      
+      {{/* 排序：按姓名升序 */}}
+      {{- $entries := sort . "Title" "asc" -}}
+      
+      {{/* 分组横线标题 */}}
+      <div class="flex items-center gap-6 mt-16 mb-10">
+        <span class="text-sm font-black tracking-widest uppercase text-primary-600 dark:text-primary-400 whitespace-nowrap">
+          {{ index $labels $lvl }}
+        </span>
+        <div class="flex-1 border-t border-slate-200 dark:border-slate-800"></div>
+      </div>
+
+      {{/* 人员网格布局 */}}
+      <div class="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        {{- range $entries }}
+          <div class="group flex flex-col items-center text-center">
+            
+            {{/* 头像：放在上方，悬停时放大 */}}
+            <div class="mb-5 relative">
+              {{- $avatar := (.Resources.ByType "image").GetMatch "*avatar*" -}}
+              <div class="w-36 h-36 rounded-2xl overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-300">
+                {{- if $avatar -}}
+                  {{- $img := $avatar.Process "Fill 300x300 Center webp" -}}
+                  <img src="{{ $img.RelPermalink }}" alt="{{ .Title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                {{- else -}}
+                  <div class="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-4xl text-slate-300 font-bold">
+                    {{ substr .Title 0 1 }}
+                  </div>
+                {{- end -}}
+              </div>
+            </div>
+
+            {{/* 姓名 */}}
+            <a href="{{ .RelPermalink }}" class="text-xl font-bold text-slate-900 dark:text-white hover:text-primary-600 transition-colors">
+              {{ .Title }}
+            </a>
+            
+            {{/* 角色/研究方向 */}}
+            {{ with .Params.role }}
+              <p class="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-snug">
+                {{ . }}
+              </p>
+            {{ end }}
+
+          </div>
+        {{- end }}
+      </div>
+
+    {{- end }}
+  {{- end }}
+
+</div>
+
+{{ end }}

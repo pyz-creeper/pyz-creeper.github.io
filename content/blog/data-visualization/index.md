@@ -3,7 +3,7 @@ title: 📈 Communicate your results effectively with the best data visualizatio
 summary: Use popular tools such as HuggingFace, Plotly, Mermaid, and data frames.
 date: 2023-10-25
 authors:
-  - admin
+  - liuzhuotao
 tags:
   - Hugo
   - Hugo Blox

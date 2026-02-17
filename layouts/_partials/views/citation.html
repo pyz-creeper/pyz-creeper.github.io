@@ -1,0 +1,86 @@
+{{ $item := .item }}
+{{ $has_attachments := partial "functions/has_attachments" $item }}
+
+<div class="pub-list-item view-citation" style="margin-bottom: 1rem"
+  data-year="{{ $item.Date.Year }}" 
+  data-major="{{ $item.Params.type_major }}" 
+  data-minor="{{ $item.Params.Subtype }}"
+  data-title="{{ lower $item.Title }}"
+  data-authors="{{ range $item.Params.authors }}{{ . | lower }} {{ end }}"
+>
+  <i class="far fa-file-alt pub-icon" aria-hidden="true"></i>
+
+  {{ if $item.Params.award }}
+    <span class="relative inline-block mr-2" x-data="{ tooltip: false }">
+      <button
+        @mouseenter="tooltip = true"
+        @mouseleave="tooltip = false"
+        @click="tooltip = !tooltip"
+        class="text-amber-500 dark:text-amber-400 hover:text-amber-600 transition-colors cursor-help flex items-center"
+        type="button"
+      >
+        <p class="fas fa-trophy text-sm">🏆</p>
+      </button>
+
+      {{/* Tooltip 弹出层：支持展示多项奖项 */}}
+      <div
+        x-show="tooltip"
+        x-cloak
+        class="absolute z-50 bottom-full left-0 transform mb-2 px-3 py-2 text-[11px] leading-relaxed text-white bg-slate-900 dark:bg-slate-800 rounded-lg shadow-xl w-max"
+      >
+        <div class="flex flex-col gap-1">
+          {{ range $item.Params.award }}
+            <div class="flex items-start gap-2">
+              <span class="text-amber-400">✨</span>
+              <span class="whitespace-nowrap">{{ . }}</span>
+            </div>
+          {{ end }}
+        </div>
+        {{/* Tooltip 小箭头 - 指向奖杯 */}}
+        <div class="absolute top-full left-2 transform w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-900 dark:border-t-slate-800"></div>
+      </div>
+    </span>
+  {{ end }}
+
+  {{/* APA Style */}}
+  {{ if eq (site.Params.publications.citation_style | default "apa") "apa" }}
+
+  <span class="article-metadata li-cite-author">
+    {{ partial "page_metadata_authors" $item }}
+  </span>
+  ({{- $item.Date.Format "2006" -}}).
+  <a href="{{ $item.RelPermalink }}" class="underline" style="color:#3f51b5;">{{ $item.Title }}</a>.
+  {{ if $item.Params.publication_short }}
+    {{- $item.Params.publication_short | markdownify -}}.
+  {{ else if $item.Params.publication }}
+    {{- $item.Params.publication | markdownify -}}.
+  {{ end }}
+
+  {{ if $has_attachments }}
+  <div class="flex flex-wrap space-x-3">
+    {{ partial "page_links" (dict "page" $item "is_list" 1) }}
+  </div>
+  {{ end }}
+
+  {{/* MLA Style */}}
+  {{ else }}
+
+  <span class="article-metadata li-cite-author">
+    {{ partial "page_metadata_authors" $item }}.
+  </span>
+  <a href="{{ $item.RelPermalink }}">{{ $item.Title }}</a>.
+  {{ if $item.Params.publication_short }}
+    {{- $item.Params.publication_short | markdownify -}},
+  {{ else if $item.Params.publication }}
+    {{- $item.Params.publication | markdownify -}},
+  {{ end }}
+  {{- $item.Date.Format "2006" -}}.
+
+  {{ if $has_attachments }}
+  <div class="flex flex-wrap space-x-3">
+    {{ partial "page_links" (dict "page" $item "is_list" 1) }}
+  </div>
+  {{ end }}
+
+  {{ end }}
+</div>

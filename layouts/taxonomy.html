@@ -1,0 +1,86 @@
+{{ define "main" }}
+
+<div data-pagefind-ignore>
+
+  {{/* 1. 页面标题部分保持不变 */}}
+  <div class="max-w-prose mx-auto flex justify-start">
+    <article class="prose prose-slate lg:prose-xl dark:prose-invert max-w-none">
+      <h1 class="lg:text-6xl !mb-4">{{ .Title }}</h1>
+      {{ .Content }}
+    </article>
+  </div>
+
+  {{/* 2. 核心逻辑修改：获取 content/authors/ 下的所有人，而不仅仅是有论文的人 */}}
+  {{- $groups := newScratch -}}
+  {{- $levels := slice "phd" "master" "alumni" -}}
+  {{- $labels := dict "phd" "PhD Students" "master" "MS Students" "alumni" "Alumni" -}}
+
+  {{/* 关键点：从 /authors 目录下获取所有子页面（即每个人的 _index.md） */}}
+  {{- $all_profiles := (site.GetPage "/authors").Pages -}}
+
+  {{- range $all_profiles }}
+    {{- /* 过滤：必须设置了 show_in_directory: true */ -}}
+    {{- if .Params.show_in_directory }}
+      {{- $level := lower (default "alumni" .Params.student_level) -}}
+      {{- $groups.Add $level (slice .) -}}
+    {{- end }}
+  {{- end }}
+
+  {{/* 3. 渲染部分：按等级循环（与之前一致） */}}
+  <div class="max-w-7xl mx-auto px-4 my-12">
+    {{- range $lvl := $levels }}
+      {{- with $groups.Get $lvl }}
+        
+        {{/* 排序：可以按姓名排序，避免乱序 */}}
+        {{- $entries := sort . "Params.enrollment_year" "asc" -}}
+        
+        <div class="flex items-center gap-4 mt-16 mb-10">
+          <div class="flex-1 border-t-2 border-slate-100 dark:border-slate-800"></div>
+          <span class="text-lg font-bold tracking-widest uppercase text-slate-400 dark:text-slate-500">
+            {{ index $labels $lvl }}
+          </span>
+          <div class="flex-1 border-t-2 border-slate-100 dark:border-slate-800"></div>
+        </div>
+
+        <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          {{- range $entries }}
+            <div class="group flex flex-col items-center p-6 bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-3xl transition-all duration-300">
+              
+              {{/* 姓名 */}}
+              <a href="{{ .RelPermalink }}" class="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                {{ .Title }}
+              </a>
+              
+              {{/* 角色 */}}
+              {{ with .Params.role }}
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center line-clamp-2">
+                  {{ . }}
+                </p>
+              {{ end }}
+
+              {{/* 头像逻辑保持不变 */}}
+              <div class="relative">
+                {{- $avatar := (.Resources.ByType "image").GetMatch "*avatar*" -}}
+                {{- if $avatar -}}
+                  {{- $avatar_image := $avatar.Process "Fill 300x300 Center webp" -}}
+                  <img src="{{ $avatar_image.RelPermalink }}" 
+                       class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white dark:border-slate-900 group-hover:scale-105 transition-transform duration-300"
+                       loading="lazy">
+                {{- else -}}
+                  <div class="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-3xl font-bold text-slate-400">
+                    {{ substr .Title 0 1 }}
+                  </div>
+                {{- end -}}
+              </div>
+
+              <!-- <a href="{{ .RelPermalink }}" class="mt-6 text-xs font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider hover:underline">
+                View Profile →
+              </a> -->
+            </div>
+          {{- end }}
+        </div>
+      {{- end }}
+    {{- end }}
+  </div>
+</div>
+{{ end }}
