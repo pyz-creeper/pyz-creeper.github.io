@@ -10,6 +10,12 @@
 {{ $title := $block.content.title | emojify | $page.RenderString }}
 {{ $subtitle := $block.content.subtitle | emojify | $page.RenderString }}
 {{ $text := $block.content.text | emojify | $page.RenderString }}
+{{ $sourceFolder := $block.content.source_folder | default "" }}
+{{ $sourcePages := slice }}
+{{ if $sourceFolder }}
+  {{ $sourcePages = where site.RegularPages "Section" $sourceFolder }}
+  {{ $sourcePages = sort $sourcePages "Weight" "asc" }}
+{{ end }}
 
 <div class="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
@@ -35,8 +41,105 @@
       {{ end }}
     </div>
 
+    {{/* Single Column Layout (supports content from source_folder pages) */}}
+    {{ if eq $layout "single-column" }}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+      <div class="lg:col-span-3">
+        <div class="lg:sticky lg:top-24">
+          <h3 class="text-3xl lg:text-4xl font-semibold text-gray-900 dark:text-white leading-tight">
+            {{ $block.content.side_title | default "Research Topics" }}
+          </h3>
+        </div>
+      </div>
+      <div class="lg:col-span-9">
+        <div class="space-y-8">
+          {{ if gt (len $sourcePages) 0 }}
+            {{ range $sourcePages }}
+            {{ $topicImage := (.Resources.GetMatch "*featured*") }}
+            <article class="border-b border-gray-200 dark:border-gray-700 pb-8">
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                <a href="{{ .RelPermalink }}" class="block md:col-span-5 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
+                  {{ if $topicImage }}
+                    {{ if reflect.IsImageResourceProcessable $topicImage }}
+                      {{ $img := $topicImage.Fill "720x420 Center webp" }}
+                      <img src="{{ $img.RelPermalink }}" alt="{{ .Title }}" class="w-full h-auto object-cover transition-transform duration-300 hover:scale-105">
+                    {{ else }}
+                      <img src="{{ $topicImage.RelPermalink }}" alt="{{ .Title }}" class="w-full h-auto object-cover transition-transform duration-300 hover:scale-105">
+                    {{ end }}
+                  {{ else }}
+                    <div class="h-52 w-full bg-gradient-to-br from-primary-200 to-primary-400 dark:from-primary-800 dark:to-primary-600"></div>
+                  {{ end }}
+                </a>
+                <div class="md:col-span-7">
+                  <h4 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
+                    <a href="{{ .RelPermalink }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      {{ .Title }}
+                    </a>
+                  </h4>
+                  <p class="text-gray-600 dark:text-gray-300 mb-4">
+                    {{ .Params.summary | default (.Summary | plainify | truncate 180) }}
+                  </p>
+                  {{ with .Params.topics }}
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {{ range first 4 . }}
+                    <span class="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs rounded">
+                      {{ . }}
+                    </span>
+                    {{ end }}
+                  </div>
+                  {{ end }}
+                  <a href="{{ .RelPermalink }}" class="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium text-sm">
+                    View details
+                    {{ partial "functions/get_icon" (dict "name" "hero/arrow-right" "attributes" "class=\"ml-1 w-4 h-4\"") }}
+                  </a>
+                </div>
+              </div>
+            </article>
+            {{ end }}
+          {{ else }}
+            {{ range $idx, $item := $block.content.items }}
+            <article class="border-b border-gray-200 dark:border-gray-700 pb-8">
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                <a href="{{ $item.url | default $item.cta.url }}" class="block md:col-span-5 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
+                  {{ if $item.image }}
+                    {{ $img := resources.Get (printf "media/%s" $item.image) }}
+                    {{ if $img }}
+                      {{ $img = $img.Fill "720x420 Center webp" }}
+                      <img src="{{ $img.RelPermalink }}" alt="{{ $item.name }}" class="w-full h-auto object-cover transition-transform duration-300 hover:scale-105">
+                    {{ else }}
+                      <div class="h-52 w-full bg-gradient-to-br {{ $item.gradient | default "from-primary-200 to-primary-400" }}"></div>
+                    {{ end }}
+                  {{ else }}
+                    <div class="h-52 w-full bg-gradient-to-br {{ $item.gradient | default "from-primary-200 to-primary-400" }}"></div>
+                  {{ end }}
+                </a>
+                <div class="md:col-span-7">
+                  <h4 class="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
+                    <a href="{{ $item.url | default $item.cta.url }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      {{ $item.name }}
+                    </a>
+                  </h4>
+                  <p class="text-gray-600 dark:text-gray-300 mb-4">{{ $item.description }}</p>
+                  {{ with $item.topics }}
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {{ range first 4 . }}
+                    <span class="inline-block px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs rounded">
+                      {{ . }}
+                    </span>
+                    {{ end }}
+                  </div>
+                  {{ end }}
+                </div>
+              </div>
+            </article>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+
     {{/* Cards Layout */}}
-    {{ if eq $layout "cards" }}
+    {{ else if eq $layout "cards" }}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
       {{ range $idx, $item := $block.content.items }}
       <div class="group relative">

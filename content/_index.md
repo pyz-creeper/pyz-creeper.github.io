@@ -71,6 +71,17 @@ sections:
   #         - events
   #   design:
   #     view: card
+  - block: research-areas
+    content:
+      title: ''
+      subtitle: ''
+      text: ''
+      side_title: Research Topic
+      source_folder: research-topics
+    design:
+      layout: single-column
+      spacing:
+        padding: [1, 0, 1, 0]
   - block: collection
     id: news
     content:

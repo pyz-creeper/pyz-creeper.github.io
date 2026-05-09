@@ -29,6 +29,14 @@
               "type": "string",
               "description": "Section description text"
             },
+            "side_title": {
+              "type": "string",
+              "description": "Left-side heading for single-column layout"
+            },
+            "source_folder": {
+              "type": "string",
+              "description": "Content section name to auto-load research topic pages from"
+            },
             "items": {
               "type": "array",
               "description": "Array of research area items",
@@ -127,7 +135,7 @@
           "properties": {
             "layout": {
               "type": "string",
-              "enum": ["cards", "hexagon", "timeline"],
+              "enum": ["cards", "hexagon", "timeline", "single-column"],
               "description": "Layout style for research areas",
               "default": "cards"
             }
