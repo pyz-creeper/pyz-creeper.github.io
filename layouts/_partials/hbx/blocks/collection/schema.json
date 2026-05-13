@@ -25,6 +25,35 @@
               "type": "string",
               "description": "Section description (supports Markdown)"
             },
+            "manual_items": {
+              "type": "array",
+              "description": "Optional manually curated items to prepend before auto-collected pages",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Manual item title"
+                  },
+                  "summary": {
+                    "type": "string",
+                    "description": "Manual item summary text"
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "Manual item link URL (relative or absolute)"
+                  },
+                  "date": {
+                    "type": "string",
+                    "description": "Display date string, e.g. 2026-05-11"
+                  },
+                  "badge": {
+                    "type": "string",
+                    "description": "Small label such as 'Hiring' or 'Pinned'"
+                  }
+                }
+              }
+            },
             "count": {
               "type": "number",
               "description": "Maximum number of items to display",

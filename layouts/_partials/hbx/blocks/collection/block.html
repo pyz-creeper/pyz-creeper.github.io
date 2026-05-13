@@ -6,6 +6,8 @@
 {{ $page := .wcPage }}
 {{ $block := .wcBlock }}
 {{ $view := $block.design.view | default "card" }}
+{{ $manualItems := $block.content.manual_items | default (slice) }}
+{{ $autoNewsItems := slice }}
 
 {{ $items_offset := $block.content.offset | default 0 }}
 {{ $items_count := $block.content.count }}
@@ -96,6 +98,43 @@
   {{ $query = first $items_count $query }}
 {{ end }}
 
+{{/* Fallback for news stored in content/news/_index.md markdown list */}}
+{{ if and (eq ($block.content.page_type | default "") "news") (eq (len $query) 0) }}
+  {{ $newsLanding := site.GetPage "/news" }}
+  {{ if $newsLanding }}
+    {{ range $sec := ($newsLanding.Params.sections | default (slice)) }}
+      {{ if and (eq ($sec.block | default "") "markdown") ($sec.content.text) }}
+        {{ $lines := split $sec.content.text "\n" }}
+        {{ range $line := $lines }}
+          {{ $trimmed := trim $line " " }}
+          {{ if hasPrefix $trimmed "- " }}
+            {{ $body := trim (replace $trimmed "- " "" 1) " " }}
+            {{ $parts := split $body "<br>" }}
+            {{ $date := "" }}
+            {{ $content := $body }}
+            {{ if ge (len $parts) 2 }}
+              {{ $date = trim (index $parts 0) " " }}
+              {{ $content = trim (delimit (after 1 $parts) "<br>") " " }}
+            {{ end }}
+            {{ $autoNewsItems = $autoNewsItems | append (dict
+              "title" "News"
+              "summary" $content
+              "date" $date
+              "badge" "News"
+            ) }}
+          {{ end }}
+        {{ end }}
+        {{ break }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if gt $items_offset 0 }}
+    {{ $autoNewsItems = first $items_count (after $items_offset $autoNewsItems) }}
+  {{ else }}
+    {{ $autoNewsItems = first $items_count $autoNewsItems }}
+  {{ end }}
+{{ end }}
+
 {{/* Check if any items have author_notes to enable Alpine.js */}}
 {{ range $query }}
   {{ if isset .Params "author_notes" }}
@@ -122,13 +161,67 @@
 
   {{ $config := dict 
       "columns" ($block.design.columns | default 2) 
-      "len" (len $query) 
+      "len" (add (add (len $query) (len $manualItems)) (len $autoNewsItems))
       "fill_image" ($block.design.fill_image | default true)
       "show_date" ($block.design.show_date | default true)
       "show_read_time" ($block.design.show_read_time | default true)
       "show_read_more" ($block.design.show_read_more | default true)
     }}
   {{ partial "functions/render_view" (dict "fragment" "start" "page" $block "item" . "view" $view "config" $config) }}
+
+  {{/* Optional manual items: useful for pinned announcements/recruiting notices */}}
+  {{ if gt (len $manualItems) 0 }}
+    {{ range $item := $manualItems }}
+      <article class="group bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl ring-1 ring-zinc-900/5 dark:ring-white/10 shadow-lg overflow-hidden transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 w-full max-w-3xl mb-6">
+        <div class="p-6 md:p-7 space-y-3">
+          <div class="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+            {{ with .badge }}
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300 font-medium">{{ . }}</span>
+            {{ end }}
+            {{ with .date }}
+              <time datetime="{{ . }}">{{ . }}</time>
+            {{ end }}
+          </div>
+          <h3 class="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 leading-tight">
+            {{ if .url }}
+              <a href="{{ .url | relLangURL }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{ .title }}</a>
+            {{ else }}
+              {{ .title }}
+            {{ end }}
+          </h3>
+          {{ with .summary }}
+            <p class="text-zinc-600 dark:text-zinc-400 text-base leading-relaxed">{{ . }}</p>
+          {{ end }}
+          {{ if .url }}
+            <div class="pt-2">
+              <a href="{{ .url | relLangURL }}" class="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium text-sm transition-all duration-300">
+                <span>{{ i18n "read_more" | default "Read more" }}</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+              </a>
+            </div>
+          {{ end }}
+        </div>
+      </article>
+    {{ end }}
+  {{ end }}
+
+  {{ if gt (len $autoNewsItems) 0 }}
+    {{ range $item := $autoNewsItems }}
+      <article class="group bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl ring-1 ring-zinc-900/5 dark:ring-white/10 shadow-lg overflow-hidden transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 w-full max-w-3xl mb-6">
+        <div class="p-6 md:p-7 space-y-3">
+          <div class="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 font-medium">{{ .badge }}</span>
+            {{ with .date }}
+              <span>{{ . | markdownify }}</span>
+            {{ end }}
+          </div>
+          <div class="text-zinc-700 dark:text-zinc-300 text-base leading-relaxed">{{ .summary | markdownify }}</div>
+        </div>
+      </article>
+    {{ end }}
+  {{ end }}
 
   {{ range $index, $item := $query }}
     {{ partial "functions/render_view" (dict "page" $block "item" . "view" $view "index" $index "config" $config) }}

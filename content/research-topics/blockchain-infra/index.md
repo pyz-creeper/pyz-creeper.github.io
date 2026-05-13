@@ -6,12 +6,12 @@ topics:
   - Cross-chain Interoperability
   - Zero-Knowledge Proofs
   - Web3 Infrastructure
+related_publications:
+  - publications/web3_and_block_chain/interoperability/4-1-1.md
+  - publications/web3_and_block_chain/web3_infra_and_application/4-2-1.md
+  - publications/web3_and_block_chain/zero_knowledge_proof/4-3-1.md
 ---
 
 Our work targets both theoretical guarantees and practical deployment for decentralized infrastructures.
 
-## Representative References
-
-1. Example Paper G. *IEEE S&P*, 2024.
-2. Example Paper H. *CCS*, 2023.
-3. Example Paper I. *Financial Cryptography*, 2022.
+{{< related-publications >}}

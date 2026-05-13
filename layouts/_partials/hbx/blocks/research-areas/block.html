@@ -60,7 +60,7 @@
               <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                 <a href="{{ .RelPermalink }}" class="block md:col-span-5 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
                   {{ if $topicImage }}
-                    {{ if reflect.IsImageResourceProcessable $topicImage }}
+                    {{ if and (eq $topicImage.ResourceType "image") (ne $topicImage.MediaType.SubType "svg") }}
                       {{ $img := $topicImage.Fill "720x420 Center webp" }}
                       <img src="{{ $img.RelPermalink }}" alt="{{ .Title }}" class="w-full h-auto object-cover transition-transform duration-300 hover:scale-105">
                     {{ else }}

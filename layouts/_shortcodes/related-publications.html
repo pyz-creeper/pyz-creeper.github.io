@@ -1,0 +1,24 @@
+{{ $refs := .Page.Params.related_publications | default (slice) }}
+{{ if gt (len $refs) 0 }}
+<h3>Representative References</h3>
+
+<ol>
+  {{ range $ref := $refs }}
+    {{ $refPath := strings.TrimPrefix "/" $ref }}
+    {{ $pub := site.GetPage $refPath }}
+    {{ if not $pub }}
+      {{ $pub = site.GetPage (printf "/%s" $refPath) }}
+    {{ end }}
+    {{ if $pub }}
+      <li>
+        <a href="{{ $pub.RelPermalink }}">{{ $pub.Title }}</a>
+        {{ with $pub.Params.publication_short }}. <em>{{ . }}</em>{{ end }}
+        {{ if and (not $pub.Params.publication_short) $pub.Params.publication }}. <em>{{ $pub.Params.publication }}</em>{{ end }}
+        {{ with $pub.Date }}, {{ .Format "2006" }}{{ end }}.
+      </li>
+    {{ else }}
+      <li><code>{{ $ref }}</code> (not found)</li>
+    {{ end }}
+  {{ end }}
+</ol>
+{{ end }}

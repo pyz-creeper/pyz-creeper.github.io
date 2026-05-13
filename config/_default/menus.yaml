@@ -22,3 +22,6 @@ main:
   - name: Awards
     url: awards/
     weight: 50
+  - name: Join
+    url: join/
+    weight: 60
