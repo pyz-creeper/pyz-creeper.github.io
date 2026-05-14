@@ -37,7 +37,7 @@ sections:
       side_title: Research Topic
       source_folder: research-topics
     design:
-      layout: single-column
+      layout: taxonomy-grid
       spacing:
         padding: [0, 0, 0, 0]
   - block: collection

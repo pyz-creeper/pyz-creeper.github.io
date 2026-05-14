@@ -12,9 +12,15 @@
 {{ $text := $block.content.text | emojify | $page.RenderString }}
 {{ $sourceFolder := $block.content.source_folder | default "" }}
 {{ $sourcePages := slice }}
+{{ $sourceSection := dict }}
+{{ $taxonomy := slice }}
 {{ if $sourceFolder }}
   {{ $sourcePages = where site.RegularPages "Section" $sourceFolder }}
   {{ $sourcePages = sort $sourcePages "Weight" "asc" }}
+  {{ with site.GetPage (printf "/%s" $sourceFolder) }}
+    {{ $sourceSection = . }}
+    {{ $taxonomy = .Params.taxonomy | default (slice) }}
+  {{ end }}
 {{ end }}
 
 <div class="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
@@ -41,8 +47,50 @@
       {{ end }}
     </div>
 
+    {{/* Taxonomy Grid Layout */}}
+    {{ if eq $layout "taxonomy-grid" }}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+      {{ range $category := $taxonomy }}
+      <article class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 p-6 shadow-sm hover:shadow-md transition-shadow">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ $category.name }}
+        </h3>
+        {{ with $category.description }}
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{ . }}</p>
+        {{ end }}
+        <div class="space-y-4">
+          {{ range $sub := ($category.subtopics | default (slice)) }}
+          <div>
+            <h4 class="text-base font-semibold text-gray-900 dark:text-gray-100">
+              {{ $sub.name }}
+            </h4>
+            <div class="mt-2 flex flex-wrap gap-2">
+              {{ range $paper := ($sub.papers | default (slice)) }}
+                {{ $paperPage := site.GetPage $paper.path }}
+                {{ $paperLabel := $paper.label | default "" }}
+                {{ if and (eq $paperLabel "") $paperPage }}
+                  {{ $paperLabel = $paperPage.Params.tag | default $paperPage.Params.publication_short | default ($paperPage.Title | truncate 24) }}
+                {{ end }}
+                {{ if $paperPage }}
+                <a href="{{ $paperPage.RelPermalink }}" class="inline-flex items-center rounded-md border border-primary-200 dark:border-primary-700 px-2.5 py-1 text-xs font-medium text-primary-700 dark:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors">
+                  [{{ $paperLabel }}]
+                </a>
+                {{ else }}
+                <span class="inline-flex items-center rounded-md border border-gray-200 dark:border-gray-700 px-2.5 py-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+                  [{{ $paperLabel | default "Paper" }}]
+                </span>
+                {{ end }}
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      </article>
+      {{ end }}
+    </div>
+
     {{/* Single Column Layout (supports content from source_folder pages) */}}
-    {{ if eq $layout "single-column" }}
+    {{ else if eq $layout "single-column" }}
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
       <div class="lg:col-span-3">
         <div class="lg:sticky lg:top-24">
