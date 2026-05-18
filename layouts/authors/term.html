@@ -32,13 +32,37 @@
       {{ end }}
 
       {{/* 社交图标 */}}
-      <div class="flex space-x-4 text-2xl text-slate-400 dark:text-slate-500">
-        {{ range .Params.social }}
-          <a href="{{ .link | safeURL }}" target="_blank" rel="noopener" class="hover:text-primary-600 transition-colors">
-            <i class="{{ .pack | default "fab" }} fa-{{ .icon }}"></i>
-          </a>
-        {{ end }}
-      </div>
+      {{ $profiles := .Params.profiles | default .Params.social }}
+      {{ with $profiles }}
+        <div class="mt-2 flex flex-wrap justify-center md:justify-start gap-4">
+          {{ range . }}
+            {{ $link := .url | default .link }}
+            {{ $icon := .icon }}
+            {{ if eq $icon "at-symbol" }}
+              {{ $email := replace (replace $link " [at] " "@") "[at]" "@" }}
+              {{ if hasPrefix $email "mailto:" }}
+                {{ $link = $email }}
+              {{ else }}
+                {{ $link = printf "mailto:%s" $email }}
+              {{ end }}
+            {{ end }}
+            {{ $scheme := (urls.Parse $link).Scheme }}
+            {{ $target := "" }}
+            {{ if in (slice "http" "https") $scheme }}
+              {{ $target = "target=\"_blank\" rel=\"me noopener noreferrer\"" }}
+            {{ end }}
+            {{ $label := .label | default (replaceRE "^.*/" "" $icon | humanize | title) }}
+            <a
+              href="{{ $link | safeURL }}"
+              {{ $target | safeHTMLAttr }}
+              aria-label="{{ $label }}"
+              title="{{ $label }}"
+              class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-500 shadow-md ring-1 ring-slate-200 transition-all hover:-translate-y-0.5 hover:text-primary-600 hover:shadow-lg dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700 dark:hover:text-primary-400">
+              {{ partial "functions/get_icon" (dict "name" $icon "attributes" "class=\"h-6 w-6\"") }}
+            </a>
+          {{ end }}
+        </div>
+      {{ end }}
     </div>
 
     {{/* 右侧栏 (8/12)：Bio + Interests + Education */}}
@@ -81,7 +105,7 @@
 
   {{/* 2. 底部：论文列表 (过滤掉非论文页面) */}}
   <div class="max-w-5xl border-t border-slate-100 dark:border-slate-800 pt-12">
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-8">Latest Publications</h2>
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-8">Publications</h2>
     
     <div id="pub-list" class="space-y-6">
       {{/* 关键修正：只显示 Section 为 publications 的页面，并按日期排序 */}}

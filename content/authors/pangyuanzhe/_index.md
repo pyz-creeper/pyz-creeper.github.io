@@ -36,14 +36,14 @@ organizations:
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:zhuotaoliu [at] tsinghua.edu.cn'
+    url: 'pangyz24 [at] mails.tsinghua.edu.cn'
     label: E-mail Me
   - icon: brands/github
-    url: https://github.com/liuzhuotao
-  - icon: academicons/google-scholar
-    url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
+    url: https://github.com/pyz-creeper
+  # - icon: academicons/google-scholar
+  #   url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
   - icon: academicons/orcid
-    url: https://orcid.org/0000-0002-7532-0434
+    url: https://orcid.org/0009-0004-7195-6306
 
 interests:
   - Privacy Computing and Hardware Acceleration
@@ -62,6 +62,6 @@ student_level: "phd"
 enrollment_year: "2024"
 ---
 
-Demo test self intro
+Hi, I am Pang Yuanzhe (庞元喆).
 
 <!-- 庞元喆 -->

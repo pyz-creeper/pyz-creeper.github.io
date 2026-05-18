@@ -16,6 +16,8 @@ sections:
     content:
       title: News
       text: |-
+        - **Oct 2025**<br><b>[Awards]</b> Our paper on cryptography-based secure graph processing wins the Distinguished Paper Award in CCS 2025. 
+        - **Sep 2025**<br><b>[AI and Cryptography]</b> Our paper on confidential/private inference over Transfomer-based large models via novel cryptography constructions is accepted by IEEE S&P 2026. 
         - **Aug 2025**<br><b>[Applied AI for Traffic Analysis]</b> Another three papers on RL-driven traffic analysis, website fingerprinting, and website application firewall are accepted by ISOC NDSS 2026.
         - **July 2025**<br><b>[AI-Driven Secure Internet Routing]</b> Our paper on understanding BGP hijacking attacks given partially deployed ROV is accepted by ISOC NDSS 2026.
         - **July 2025**<br><b>[Academic Service]</b> Another edition of USENIX Security. Looking forward to your submissions.

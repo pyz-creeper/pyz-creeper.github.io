@@ -9,4 +9,4 @@
 title: People
 ---
 
-TODO 3: add detail information for everyone in own pages
+Here are the members of Inspiring Group.
