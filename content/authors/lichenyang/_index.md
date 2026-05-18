@@ -36,14 +36,14 @@ organizations:
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:zhuotaoliu [at] tsinghua.edu.cn'
+    url: 'mailto:lichenyang0707 [at] gmail.com'
     label: E-mail Me
-  - icon: brands/github
-    url: https://github.com/liuzhuotao
-  - icon: academicons/google-scholar
-    url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
+  # - icon: brands/github
+  #   url: https://github.com/liuzhuotao
+  # - icon: academicons/google-scholar
+  #   url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
   - icon: academicons/orcid
-    url: https://orcid.org/0000-0002-7532-0434
+    url: https://orcid.org/0009-0005-9870-1829
 
 interests:
   - Hardware Acceleration of Privacy Computing

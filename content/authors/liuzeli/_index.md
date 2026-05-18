@@ -52,7 +52,7 @@ education:
   courses:
     - course: B.E. in Computer Science and Technology
       institution: Tsinghua University
-      year: 2024
+      year: 2025
 
 
 show_in_directory: true

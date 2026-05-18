@@ -23,7 +23,7 @@ superuser: false
 highlight_name: true
 
 # Role/position/tagline
-role: PhD Student
+role: PhD Candidate
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
@@ -35,15 +35,15 @@ organizations:
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
-  - icon: at-symbol
-    url: 'mailto:zhuotaoliu [at] tsinghua.edu.cn'
-    label: E-mail Me
+  # - icon: at-symbol
+  #   url: 'mailto:zhuotaoliu [at] tsinghua.edu.cn'
+  #   label: E-mail Me
   - icon: brands/github
-    url: https://github.com/liuzhuotao
-  - icon: academicons/google-scholar
-    url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
-  - icon: academicons/orcid
-    url: https://orcid.org/0000-0002-7532-0434
+    url: https://github.com/xht13127
+  # - icon: academicons/google-scholar
+  #   url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
+  # - icon: academicons/orcid
+  #   url: https://orcid.org/0000-0002-7532-0434
 
 interests:
   - ML in Network Devices

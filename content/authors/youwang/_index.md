@@ -36,20 +36,18 @@ organizations:
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:zhuotaoliu [at] tsinghua.edu.cn'
+    url: 'mailto:youw21 [at] mails.tsinghua.edu.cn'
     label: E-mail Me
   - icon: brands/github
-    url: https://github.com/liuzhuotao
-  - icon: academicons/google-scholar
-    url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
+    url: https://github.com/YouWonderful
+  # - icon: academicons/google-scholar
+  #   url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
   - icon: academicons/orcid
     url: https://orcid.org/0000-0002-7532-0434
 
 interests:
-  - Large Language Models
-  - Computer Vision
-  - Reinforcement Learning
-  - AI Ethics
+  - Privacy Computing
+  - Knowledge Engineering
 
 education:
   courses:

@@ -23,7 +23,7 @@ superuser: false
 highlight_name: true
 
 # Role/position/tagline
-role: PhD Student
+role: PhD Candidate
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
