@@ -36,18 +36,18 @@ organizations:
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:zhuotaoliu [at] tsinghua.edu.cn'
+    url: 'mailto:cbackyx [at] gmail.com'
     label: E-mail Me
   - icon: brands/github
-    url: https://github.com/liuzhuotao
-  - icon: academicons/google-scholar
-    url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
+    url: https://github.com/CBackyx
+  # - icon: academicons/google-scholar
+  #   url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
   - icon: academicons/orcid
-    url: https://orcid.org/0000-0002-7532-0434
+    url: https://orcid.org/0009-0003-1681-3786
 
 interests:
-  - Privacy Computing
-  - Responsible/Trust AI
+  - Secure Multi-party Graph Processing/Graph Learning
+  - Secure Infrastructure for Agentic AI
 
 education:
   courses:
@@ -59,5 +59,5 @@ education:
 show_in_directory: true
 student_level: "phd"
 ---
-
+Hi, this is Zhenhua Zou (邹振华). Over the past few years, my work has focused on secure, privacy-preserving multi-party graph processing and learning. A primary goal of my research is enhancing communication and computation efficiency through a combination of cryptographic and system-level optimizations. Additionally, I have a strong background in LLM-driven program synthesis, alongside system security techniques such as eBPF. Currently, I am leveraging my expertise in cryptography and software/system security to architect trustworthy, secure infrastructure for the emerging generation of LLM-based agentic AI.
 <!-- 邹振华 -->
