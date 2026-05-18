@@ -36,17 +36,19 @@ organizations:
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:zhuotaoliu [at] tsinghua.edu.cn'
+    url: 'mailto:zhanqy24 [at] mails.tsinghua.edu.cn'
     label: E-mail Me
   - icon: brands/github
-    url: https://github.com/liuzhuotao
+    url: https://github.com/Jacobzqy
   - icon: academicons/google-scholar
-    url: https://scholar.google.com/citations?user=F8gi4rcAAAAJ
+    url: https://scholar.google.com/citations?user=9F2QGfkAAAAJ
   - icon: academicons/orcid
-    url: https://orcid.org/0000-0002-7532-0434
+    url: https://orcid.org/0009-0000-3651-3287
 
 interests:
-  - Systems Security
+  - AI Security
+  - Data Privacy
+  - LLM Agents and Memory
 
 education:
   courses:
@@ -60,4 +62,5 @@ student_level: "master"
 enrollment_year: 2024
 ---
 
+Hi, I am Qiuyang Zhan (詹秋阳). Outside of research, I enjoy running and hiking.
 <!-- 詹秋阳 -->
