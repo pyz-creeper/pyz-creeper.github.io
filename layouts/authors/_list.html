@@ -52,7 +52,10 @@
                   {{- $img := $avatar.Process "Fill 300x300 Center webp" -}}
                   <img src="{{ $img.RelPermalink }}" alt="{{ .Title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 {{- else -}}
-                  <div class="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-4xl text-slate-300 font-bold">
+                  {{- $dailyAvatar := eq (lower (default "" .Params.random_avatar)) "daily" -}}
+                  <div
+                    class="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-4xl text-slate-300 font-bold"
+                    {{ if $dailyAvatar }}data-daily-avatar data-avatar-seed="{{ printf "%s:%s" .RelPermalink .Title }}" data-avatar-name="{{ .Title }}"{{ end }}>
                     {{ substr .Title 0 1 }}
                   </div>
                 {{- end -}}
@@ -80,4 +83,5 @@
 
 </div>
 
+{{ partial "daily_avatar_script.html" . }}
 {{ end }}

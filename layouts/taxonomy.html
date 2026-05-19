@@ -67,7 +67,10 @@
                        class="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white dark:border-slate-900 group-hover:scale-105 transition-transform duration-300"
                        loading="lazy">
                 {{- else -}}
-                  <div class="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-3xl font-bold text-slate-400">
+                  {{- $dailyAvatar := eq (lower (default "" .Params.random_avatar)) "daily" -}}
+                  <div
+                    class="w-32 h-32 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-3xl font-bold text-slate-400"
+                    {{ if $dailyAvatar }}data-daily-avatar data-avatar-seed="{{ printf "%s:%s" .RelPermalink .Title }}" data-avatar-name="{{ .Title }}"{{ end }}>
                     {{ substr .Title 0 1 }}
                   </div>
                 {{- end -}}
@@ -83,4 +86,5 @@
     {{- end }}
   </div>
 </div>
+{{ partial "daily_avatar_script.html" . }}
 {{ end }}

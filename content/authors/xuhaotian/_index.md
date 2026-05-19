@@ -57,6 +57,7 @@ education:
 show_in_directory: true
 student_level: "phd"
 enrollment_year: "2023"
+random_avatar: daily
 ---
 
 <!-- 许澔天 -->
